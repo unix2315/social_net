@@ -18,6 +18,21 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def like_count(self):
+        return self.likes.count()
+
+    def add_like(self, user):
+        like, is_created = Like.objects.get_or_create(
+            post=self, user=user
+        )
+        return like
+
+    def remove_like(self, user):
+        Like.objects.filter(
+            post=self, user=user
+        ).delete()
+
 
 class Like(models.Model):
     user = models.ForeignKey(User,
